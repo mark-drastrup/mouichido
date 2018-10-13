@@ -72,3 +72,4 @@ typings/
 
 #sqlite3 files
 *.sqlite3
+*.sqlite
