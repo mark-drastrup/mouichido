@@ -8,6 +8,10 @@ const OktaJwtVerifier = require('@okta/jwt-verifier');
 const User = require("../db/models").User;
 const Entry = require("../db/models").Entry;
 
+app.get("/", (req, res) => {
+    res.send("Test");
+});
+
 app.listen(3000, () => {
     console.log("App is running on port 3000")
 })
