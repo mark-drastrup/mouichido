@@ -33,11 +33,24 @@ export default {
 	},
 	methods: {
 		async login() {
-			const reponse = await authenticationService.login({
-				username: this.username,
-				password: this.password
+            try {
+                const response = await authenticationService.login({
+                    username: this.username,
+                    password: this.password
+                });
+                this.$store.dispatch("setToken", response.data.token);
+                this.$store.dispatch("setUser", response.data.username);
+            } catch (error) {
+                this.error = error.response.data.error;
+            }
+		},
+		logout() {
+			this.$store.dispatch("setToken", null);
+			this.$store.dispatch("setUser", null);
+			//navigate to homepage
+			this.$router.push({
+				name: "root"
 			});
-			console.log(reponse);
 		}
 	}
 };

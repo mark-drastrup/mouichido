@@ -6,13 +6,16 @@ const bodyParser = require('body-parser');
 const Sequelize = require('sequelize');
 const jwt = require("jsonwebtoken");
 const config = require("./config");
+const passport = require("passport");
 const User = require("./models").User;
 const Entry = require("./models").Entry;
+
 
 //Configure app
 app.use(bodyParser.json())
 app.use(morgan("combined"));
 app.use(cors());
+require('./passport')
 
 //Helper functions
 function jwtSignUser(user) {
@@ -22,12 +25,26 @@ function jwtSignUser(user) {
 	});
 }
 
+function isAuthenticated(req, res, next) {
+	passport.authenticate("jwt", function(err, user) {
+		if(err || !user) {
+			res.status(403).send({
+				error: "You have to be logged in to access this page"
+			});
+		} else {
+			req.user = user;
+			next();
+		}
+	})(req, res, next)
+}
+
+
 //Routes
 app.get("/", (req, res) => {
 	res.send("Test");
 });
 
-app.post("/register", async function (req, res) {
+app.post("/register",isAuthenticated ,async function (req, res) {
 	try {
 		const user = await User.create(req.body);
 		const userJson = user.toJSON();
@@ -43,10 +60,8 @@ app.post("/register", async function (req, res) {
 });
 
 app.post("/login", async function (req, res) {
-	console.log(req.body);
 	try {
 		const { username, password } = req.body;
-		console.log(username);
 		const user = await User.findOne({
 			where: {
 				username: username

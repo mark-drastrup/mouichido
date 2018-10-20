@@ -33,11 +33,17 @@ export default {
 	},
 	methods: {
 		async signUp() {
-			const reponse = await authenticationService.register({
-				username: this.username,
-				password: this.password
-			});
-			console.log(reponse);
+			try {
+				const response = await authenticationService.register({
+					username: this.username,
+					password: this.password
+				});
+				this.$store.dispatch("setToken", response.data.token);
+				this.$store.dispatch("setUser", response.data.user);
+			} catch (error) {
+				this.error = error.response.data.error;
+			}
+			
 		}
 	}
 };
