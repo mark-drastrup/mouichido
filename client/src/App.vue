@@ -1,12 +1,15 @@
 <template>
   <div id="app">
-    <header>
-      <span>Vue.js PWA</span>
-    </header>
-    <main>
-      <!-- <img src="./assets/logo.png" alt="Vue.js PWA"> -->
-      <router-view></router-view>
-    </main>
+    <v-app>
+      <header>
+        <link href="https://fonts.googleapis.com/css?family=Material+Icons" rel="stylesheet">
+      </header>
+      <main>
+        <v-container fluid>
+          <router-view></router-view>
+        </v-container>
+      </main>
+    </v-app>
   </div>
 </template>
 
@@ -19,6 +22,7 @@ export default {
 <style>
 body {
   margin: 0;
+  overflow-y: hidden !important;
 }
 
 #app {
@@ -50,5 +54,9 @@ header span {
   font-weight: 400;
   box-sizing: border-box;
   padding-top: 16px;
+}
+
+::-webkit-scrollbar {
+  width: 0;
 }
 </style>
