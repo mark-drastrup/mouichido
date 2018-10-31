@@ -25,6 +25,11 @@ body {
   overflow-y: hidden !important;
 }
 
+main .v-content {
+  margin-top: 0;
+  padding-top: -50px;
+}
+
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
