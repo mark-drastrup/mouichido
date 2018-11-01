@@ -23,7 +23,10 @@ module.exports = {
       grammar: {
         type: Sequelize.TEXT
       },
-      sentences: {
+      sample_romaji: {
+        type: Sequelize.TEXT
+      },
+      sample_kana: {
         type: Sequelize.TEXT
       },
       createdAt: {

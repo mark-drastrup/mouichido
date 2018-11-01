@@ -6,7 +6,8 @@ module.exports = (sequelize, DataTypes) => {
     tag: DataTypes.STRING,
     url: DataTypes.STRING,
     grammar: DataTypes.TEXT,
-    sentences: DataTypes.TEXT
+    sample_romaji: DataTypes.TEXT,
+    sample_kana: DataTypes.TEXT
   }, {});
   Entry.associate = function(models) {
     // associations can be defined here

@@ -31,7 +31,7 @@
 							<v-flex xs12 sm6>
 								<v-text-field
 									label="Grammar ressource"
-									v-model="ressource"
+									v-model="url"
 								></v-text-field>
 							</v-flex>
 
@@ -40,7 +40,7 @@
 								name="input"
 								label="Grammar description"
 								rows="4"
-								v-model="grammar_description"
+								v-model="grammar"
 								></v-textarea>
 							</v-flex>
 
@@ -53,7 +53,7 @@
 								></v-textarea>
 							</v-flex>
 
-							<v-flex xs12>
+							<!-- <v-flex xs12>
 								<v-textarea
 								name="input"
 								label="Sample sentences (Kana)"
@@ -61,6 +61,17 @@
 								rows="4"
 								v-bind="sample_kana"
 								v-on:input="sample_kana = $event.target.sample_kana"
+								id="kana"
+								></v-textarea>
+							</v-flex> -->
+
+							<v-flex xs12>
+								<v-textarea
+								name="input"
+								label="Sample sentences (Kana)"
+								hint="Write UPPERCASE for Katakana"
+								rows="4"
+								v-model="sample_kana"
 								id="kana"
 								></v-textarea>
 							</v-flex>
@@ -98,7 +109,7 @@
 							<v-flex xs12 sm6>
 								<v-text-field
 									label="Grammar ressource"
-									v-model="ressource"
+									v-model="url"
 									disabled
 								></v-text-field>
 							</v-flex>
@@ -138,7 +149,7 @@
 					</v-container>
 				</v-card-text>
         <v-responsive>
-					<v-btn color="success" v-on:click="save" v-if="editing">Save</v-btn>
+					<v-btn color="success" v-on:click="create" v-if="editing">Save</v-btn>
 					<v-btn color="info" v-on:click="edit" v-if="!editing">Edit</v-btn>
         </v-responsive>
       </v-card>
@@ -147,6 +158,7 @@
 </template>
 
 <script>
+	import createService from "@/services/createService";
 	export default {
 	  	name: "Grammar",
 		data() {
@@ -156,17 +168,16 @@
 				title: "",
 				short_description: "",
 				tag: "",
-				ressource: "",
-				grammar_description: "",
+				url: "",
+				grammar: "",
 				sample_romaji: "",
 				sample_kana: "",
 				editing: true
 			};
 		},
 		mounted() {
-			/* let kana = this.$refs.kana; */
-			let kana = document.getElementById("kana")
-			wanakana.bind(kana);
+			/* let kana = document.getElementById("kana")
+			wanakana.bind(kana); */
 		},
 		methods: {
 			save() {
@@ -176,9 +187,25 @@
 			edit() {
 				this.editing = true
 			},
-			remove() {
+			/* remove() {
 				this.$emit("delete");
-			}
+			}, */
+			async create() {
+				try {
+						const response = await createService.create({
+							title: this.title,
+							short_description: this.short_description,
+							tag: this.tag,
+							url: this.url,
+							grammar: this.grammar,
+							sample_romaji: this.sample_romaji,
+							sample_kana: this.sample_kana,
+						});
+						
+				} catch (error) {
+						
+				}
+		},
 		}
   }
 
