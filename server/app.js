@@ -46,6 +46,7 @@ app.get("/", (req, res) => {
 
 app.post("/register", async function (req, res) {
 	try {
+		console.log(req.body);
 		const user = await User.create(req.body);
 		const userJson = user.toJSON();
 		res.send({
@@ -95,8 +96,21 @@ app.post("/login", async function (req, res) {
 	}
 });
 
-app.post("/grammar", isAuthenticated,async function(req, res) {
+app.get("/grammar/:id", isAuthenticated, async function(req, res) {
 	try {
+		const grammar = await Entry.findById(req.params.id);
+		console.log(grammar)
+		res.send(grammar);
+	} catch (error) {	
+		res.status(500).send({
+			error: "An error has occured while trying to fetch grammar"
+		});
+	}
+});
+
+app.post("/grammar", isAuthenticated, async function(req, res) {
+	try {
+		console.log(req.body)
 		const entry = await Entry.create(req.body);
 		const entryJson = entry.toJSON;
 		res.send({
@@ -108,21 +122,6 @@ app.post("/grammar", isAuthenticated,async function(req, res) {
 		});
 	}
 });
-
-/* app.post("/register",isAuthenticated ,async function (req, res) {
-	try {
-		const user = await User.create(req.body);
-		const userJson = user.toJSON();
-		res.send({
-			user: userJson,
-			token: jwtSignUser(userJson)
-		});
-	} catch (error) {
-		res.status(400).send({
-			error: "This email account is already used."
-		});
-	}
-}); */
 
 app.listen(3000, () => {
 	console.log("App is running on port 3000")

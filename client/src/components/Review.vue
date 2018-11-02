@@ -5,19 +5,20 @@
         <v-card-title>
             <h1 class="grey--text text-lg-center">Today's entry</h1>
         </v-card-title>
-				<v-card-text v-if="editing">
+		<p>{{myGrammar.title }}</p>
+				<v-card-text v-if="myGrammar.editing">
 					<v-container grid-list-sm>
 						<v-layout row wrap>
 							<v-flex xs12 sm6>
 								<v-text-field
 									label="Title"
-									v-model="title"
+									v-model="myGrammar.title"
 								></v-text-field>
 							</v-flex>
 							<v-flex xs12 sm6>
 								<v-text-field
 									label="Short description"
-									v-model="short_description"
+									v-model="myGrammar.short_description"
 								></v-text-field>
 							</v-flex>
 
@@ -25,13 +26,13 @@
 								<v-select
 									:items="items"
 									label="Tag"
-									v-model="tag"
+									v-model="myGrammar.tag"
 								></v-select>
 							</v-flex>
 							<v-flex xs12 sm6>
 								<v-text-field
 									label="Grammar ressource"
-									v-model="url"
+									v-model="myGrammar.url"
 								></v-text-field>
 							</v-flex>
 
@@ -40,7 +41,7 @@
 								name="input"
 								label="Grammar description"
 								rows="4"
-								v-model="grammar"
+								v-model="myGrammar.grammar"
 								></v-textarea>
 							</v-flex>
 
@@ -49,7 +50,7 @@
 								name="input"
 								label="Sample sentences (Romaji)"
 								rows="4"
-								v-model="sample_romaji"
+								v-model="myGrammar.sample_romaji"
 								></v-textarea>
 							</v-flex>
 
@@ -71,7 +72,7 @@
 								label="Sample sentences (Kana)"
 								hint="Write UPPERCASE for Katakana"
 								rows="4"
-								v-model="sample_kana"
+								v-model="myGrammar.sample_kana"
 								id="kana"
 								></v-textarea>
 							</v-flex>
@@ -80,20 +81,20 @@
 					</v-container>
 				</v-card-text>
 
-				<v-card-text v-if="!editing">
+				<v-card-text v-if="!myGrammar.editing">
 					<v-container fluid grid-list-sm>
 						<v-layout row wrap>
 							<v-flex xs12 sm6>
 								<v-text-field
 									label="Title"
-									v-model="title"
+									v-model="myGrammar.title"
 									disabled
 								></v-text-field>
 							</v-flex>
 							<v-flex xs12 sm6>
 								<v-text-field
 									label="Short description"
-									v-model="short_description"
+									v-model="myGrammar.short_description"
 									disabled
 								></v-text-field>
 							</v-flex>
@@ -102,14 +103,14 @@
 								<v-select
 									:items="items"
 									label="Tag"
-									v-model="tag"
+									v-model="myGrammar.tag"
 									disabled
 								></v-select>
 							</v-flex>
 							<v-flex xs12 sm6>
 								<v-text-field
 									label="Grammar ressource"
-									v-model="url"
+									v-model="myGrammar.url"
 									disabled
 								></v-text-field>
 							</v-flex>
@@ -119,7 +120,7 @@
 								name="input"
 								label="Grammar description"
 								rows="4"
-								v-model="grammar_description"
+								v-model="myGrammar.grammar"
 								disabled
 								></v-textarea>
 							</v-flex>
@@ -129,7 +130,7 @@
 								name="input"
 								label="Sample sentences (Romaji)"
 								rows="4"
-								v-model="sample_romaji"
+								v-model="myGrammar.sample_romaji"
 								disabled
 								></v-textarea>
 							</v-flex>
@@ -140,7 +141,7 @@
 								label="Sample sentences (Kana)"
 								hint="Write UPPERCASE for Katakana"
 								rows="4"
-								v-model="sample_kana"
+								v-model="myGrammar.sample_kana"
 								disabled
 								></v-textarea>
 							</v-flex>
@@ -149,8 +150,9 @@
 					</v-container>
 				</v-card-text>
         <v-responsive>
-					<v-btn color="success" v-on:click="create" v-if="editing">Save</v-btn>
-					<v-btn color="info" v-on:click="edit" v-if="!editing">Edit</v-btn>
+					<v-btn color="success" v-on:click="save" v-if="myGrammar.editing">Save</v-btn>
+					<v-btn color="success" v-on:click="reviewed" v-if="!myGrammar.editing">Reviewed</v-btn>
+					<v-btn color="info" v-on:click="edit" v-if="!myGrammar.editing">Edit</v-btn>
         </v-responsive>
       </v-card>
     </v-flex>
@@ -158,34 +160,37 @@
 </template>
 
 <script>
-	import createService from "@/services/createService";
 	export default {
-	  	name: "Grammar",
+	  	name: "Review",
+		props: ["entry"],
 		data() {
 			return {
 				message: "",
 				items: [],
-				title: "",
-				short_description: "",
-				tag: "",
-				url: "",
-				grammar: "",
-				sample_romaji: "",
-				sample_kana: "",
-				editing: true
+				myGrammar: ""
 			};
 		},
-		mounted() {
-			/* let kana = document.getElementById("kana")
-			wanakana.bind(kana); */
+		beforeMount() {
+			this.myGrammar = this.entry
 		},
+		/* async mounted() {
+			let kana = document.getElementById("kana")
+			wanakana.bind(kana); 
+		}, */
+		/* watch: {
+			grammar(val) {
+				this.grammarVal = val
+			}
+		}, */
 		methods: {
 			save() {
-				this.editing = false;
-				this.remove();
+				this.$emit("save", this.myGrammar);
 			},
 			edit() {
-				this.editing = true
+				this.$emit("edit");
+			},
+			reviewed() {
+				this.$emit("reviewed");
 			},
 			/* remove() {
 				this.$emit("delete");
@@ -205,13 +210,10 @@
 				} catch (error) {
 						
 				}
-		},
+			},
 		}
   }
 
-	var test = document.getElementById("kana");
-	/* wanakana.bind(kana); */
-	
  
 </script>
 

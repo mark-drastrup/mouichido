@@ -15,7 +15,7 @@
             <v-list-tile-title>Dashboard</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile @click="test">
+        <v-list-tile>
           <v-list-tile-action>
             <v-icon>settings</v-icon>
           </v-list-tile-action>
@@ -33,7 +33,7 @@
       <v-container fluid>
         <v-layout>
           <v-flex>
-            <Grammar v-if="showCard" @delete="test"></Grammar>
+            <Review v-if="showCard" @reviewed="reviewed" @edit="edit" @save="save" :entry="entry"></Review>
           </v-flex>
         </v-layout>
       </v-container>
@@ -42,27 +42,68 @@
 </template>
 
 <script>
-  import Grammar from "./Grammar"
-
+  import Review from "./Review"
+  import grammarService from "@/services/grammarService";
   export default {
     data: () => ({
       drawer: true,
-      showCard: false
+      showCard: true,
+      entry: {
+        title: "",
+        short_description: "",
+        tag: "",
+        url: "",
+        grammar: "",
+        sample_romaji: "",
+        sample_kana: "",
+        editing: false
+      }
     }),
     components: {
-      Grammar
+      Review
     },
     props: {
       source: String
     },
     methods: {
-      test() {
+      reviewed() {
         this.showCard = false;
+      },
+      save() {
+        this.create();
+        //this.entry.editing = false;
+      },
+      edit() {
+        this.entry.editing = true;
       },
       show() {
         this.showCard = true;
+      },
+      async create() {
+				try {
+						const response = await grammarService.post({
+							title: this.entry.title,
+							short_description: this.entry.short_description,
+							tag: this.entry.tag,
+							url: this.entry.url,
+							grammar: this.entry.grammar,
+							sample_romaji: this.entry.sample_romaji,
+							sample_kana: this.entry.sample_kana,
+						});
+						
+				} catch (error) {
+						console.log(error)
+				}
       }
-    }
+    },
+    async mounted() {
+        try {
+          const grammarId = 1;
+          this.entry = (await grammarService.show(grammarId)).data
+        } catch (error) {
+          console.log(error)
+        }
+      }
   }
 </script>
 
