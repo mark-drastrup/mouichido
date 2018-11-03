@@ -8,8 +8,8 @@ export default {
             }
         })
     },
-    show(grammarId) {
-        return Api().get(`grammar/${grammarId}`)
+    show(userId) {
+        return Api().get(`grammar/${userId}`)
     },
     post(grammar) {
         return Api().post("grammar", grammar);

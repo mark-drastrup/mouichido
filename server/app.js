@@ -68,7 +68,6 @@ app.post("/login", async function (req, res) {
 				username: username
 			}
 		});
-		console.log(user);
 
 		if (!user) {
 			return res.status(403).send({
@@ -96,10 +95,9 @@ app.post("/login", async function (req, res) {
 	}
 });
 
-app.get("/grammar/:id", isAuthenticated, async function(req, res) {
+app.get("/grammar/:userId", isAuthenticated, async function(req, res) {
 	try {
-		const grammar = await Entry.findById(req.params.id);
-		console.log(grammar)
+		const grammar = await Entry.findById(req.params.userId);
 		res.send(grammar);
 	} catch (error) {	
 		res.status(500).send({
@@ -122,6 +120,27 @@ app.post("/grammar", isAuthenticated, async function(req, res) {
 		});
 	}
 });
+
+/* app.post("/grammar", isAuthenticated, async function(req, res) {
+	try {
+		const entry = await User.findById(1)
+		.then(user => { 
+			user.createEntry(req.body)
+		})
+		.then(response => {
+			console.log(response)
+			const entryJson = entry.toJSON;
+			res.send({
+				entry: entryJson
+			});
+		}); 
+		
+	} catch (error) {
+		res.status(400).send({
+			error: "An error has occured while trying to save grammar."
+		});
+	}
+}); */
 
 app.listen(3000, () => {
 	console.log("App is running on port 3000")
