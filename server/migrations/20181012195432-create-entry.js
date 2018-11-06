@@ -39,6 +39,9 @@ module.exports = {
       },
       UserId: {
         type: Sequelize.INTEGER
+      },
+      is_reviewed: {
+        type: Sequelize.BOOLEAN
       }
     });
   },

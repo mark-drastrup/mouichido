@@ -2,7 +2,7 @@ import Api from "@/services/api";
 
 export default {
     index(search) {
-        return Api().get("index", {
+        return Api().get("grammar", {
             params: {
                 search: search
             }
@@ -15,6 +15,6 @@ export default {
         return Api().post("grammar", grammar);
     },
     put(grammar) {
-        return Api.put(`grammar/${grammar.id}`, grammar);
+        return Api().put("grammar", grammar);
     }
 };

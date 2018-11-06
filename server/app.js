@@ -95,10 +95,33 @@ app.post("/login", async function (req, res) {
 	}
 });
 
-app.get("/grammar/:userId", isAuthenticated, async function(req, res) {
+/* app.get("/grammar/:userId", isAuthenticated, async function(req, res) {
 	try {
-		const grammar = await Entry.findById(req.params.userId);
+		let grammar = await Entry.findAll({
+			where: {
+				UserId: req.params.userId
+			}
+		});
 		res.send(grammar);
+	} catch (error) {	
+		res.status(500).send({
+			error: "An error has occured while trying to fetch grammar"
+		});
+	}
+}); */
+
+app.get("/grammar/:grammarId", isAuthenticated, async function(req, res) {
+	try {
+		console.log("Jeg er inde")
+		const grammar = await Entry.findAll({
+			limit: 1,
+			where: {
+				is_reviewed: false
+			},
+			order: [["createdAt", "ASC"]]
+		}).then(data => {
+			res.send(data);
+		});
 	} catch (error) {	
 		res.status(500).send({
 			error: "An error has occured while trying to fetch grammar"
@@ -108,15 +131,27 @@ app.get("/grammar/:userId", isAuthenticated, async function(req, res) {
 
 app.post("/grammar", isAuthenticated, async function(req, res) {
 	try {
-		console.log(req.body)
 		const entry = await Entry.create(req.body);
-		const entryJson = entry.toJSON;
-		res.send({
-			entry: entryJson
-		});
+		res.send(entry);
 	} catch (error) {
-		res.status(400).send({
+		res.status(500).send({
 			error: "An error has occured while trying to save grammar."
+		});
+	}
+});
+
+app.put("/grammar", isAuthenticated, async function(req, res) {
+	try {
+		console.log("Jeg er inde");
+		const entry = await Entry.update(req.body, {
+			where: {
+				id: req.body.id
+			}
+		});
+		res.send(entry);
+	} catch (error) {
+		res.status(500).send({
+			error: "An error has occured while trying to update grammar."
 		});
 	}
 });

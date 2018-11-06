@@ -3,37 +3,38 @@
     <v-flex xs12 sm6 offset-sm3>
         <v-card>
             <v-card-title>
-                <h1 class="grey--text text-lg-center">Today's entry</h1>
+                <h1 class="grey--text text-lg-center">Today's Review</h1>
             </v-card-title>
+        
             <v-card-text v-if="editing">
                 <v-container grid-list-sm>
                     <v-layout row wrap>
                         <v-flex xs12 sm6>
-                            <v-text-field label="Title" v-model="myGrammar.title"></v-text-field>
+                            <v-text-field label="Title" v-model="myGrammar[0].title"></v-text-field>
                         </v-flex>
                         <v-flex xs12 sm6>
-                            <v-text-field label="Short description" v-model="myGrammar.short_description"></v-text-field>
+                            <v-text-field label="Short description" v-model="myGrammar[0].short_description"></v-text-field>
                         </v-flex>
 
                         <v-flex xs12 sm6>
-                            <v-select :items="items" label="Tag" v-model="myGrammar.tag"></v-select>
+                            <v-select :items="items" label="Tag" v-model="myGrammar[0].tag"></v-select>
                         </v-flex>
                         <v-flex xs12 sm6>
-                            <v-text-field label="Grammar ressource" v-model="myGrammar.url"></v-text-field>
-                        </v-flex>
-
-                        <v-flex xs12>
-                            <v-textarea name="input" label="Grammar description" rows="4" v-model="myGrammar.grammar"></v-textarea>
+                            <v-text-field label="Grammar ressource" v-model="myGrammar[0].url"></v-text-field>
                         </v-flex>
 
                         <v-flex xs12>
-                            <v-textarea name="input" label="Sample sentences (Romaji)" rows="4" v-model="myGrammar.sample_romaji"></v-textarea>
+                            <v-textarea name="input" label="Grammar description" rows="4" v-model="myGrammar[0].grammar"></v-textarea>
+                        </v-flex>
+
+                        <v-flex xs12>
+                            <v-textarea name="input" label="Sample sentences (Romaji)" rows="4" v-model="myGrammar[0].sample_romaji"></v-textarea>
                         </v-flex>
 
                         <!-- <v-flex xs12>		<v-textarea		name="input"		label="Sample sentences (Kana)"		hint="Write UPPERCASE for Katakana"		rows="4"		v-bind="sample_kana"		v-on:input="sample_kana = $event.target.sample_kana"		id="kana"		></v-textarea>		</v-flex> -->
 
                         <v-flex xs12>
-                            <v-textarea name="input" label="Sample sentences (Kana)" hint="Write UPPERCASE for Katakana" rows="4" v-model="myGrammar.sample_kana" id="kana"></v-textarea>
+                            <v-textarea name="input" label="Sample sentences (Kana)" hint="Write UPPERCASE for Katakana" rows="4" v-model="myGrammar[0].sample_kana" id="kana"></v-textarea>
                         </v-flex>
 
                     </v-layout>
@@ -44,29 +45,29 @@
                 <v-container fluid grid-list-sm>
                     <v-layout row wrap>
                         <v-flex xs12 sm6>
-                            <v-text-field label="Title" v-model="myGrammar.title" disabled></v-text-field>
+                            <v-text-field label="Title" v-model="myGrammar[0].title" disabled></v-text-field>
                         </v-flex>
                         <v-flex xs12 sm6>
-                            <v-text-field label="Short description" v-model="myGrammar.short_description" disabled></v-text-field>
+                            <v-text-field label="Short description" v-model="myGrammar[0].short_description" disabled></v-text-field>
                         </v-flex>
 
                         <v-flex xs12 sm6>
-                            <v-select :items="items" label="Tag" v-model="myGrammar.tag" disabled></v-select>
+                            <v-select :items="items" label="Tag" v-model="myGrammar[0].tag" disabled></v-select>
                         </v-flex>
                         <v-flex xs12 sm6>
-                            <v-text-field label="Grammar ressource" v-model="myGrammar.url" disabled></v-text-field>
+                            <v-text-field label="Grammar ressource" v-model="myGrammar[0].url" disabled></v-text-field>
                         </v-flex>
 
                         <v-flex xs12>
-                            <v-textarea name="input" label="Grammar description" rows="4" v-model="myGrammar.grammar" disabled></v-textarea>
+                            <v-textarea name="input" label="Grammar description" rows="4" v-model="myGrammar[0].grammar" disabled></v-textarea>
                         </v-flex>
 
                         <v-flex xs12>
-                            <v-textarea name="input" label="Sample sentences (Romaji)" rows="4" v-model="myGrammar.sample_romaji" disabled></v-textarea>
+                            <v-textarea name="input" label="Sample sentences (Romaji)" rows="4" v-model="myGrammar[0].sample_romaji" disabled></v-textarea>
                         </v-flex>
 
                         <v-flex xs12>
-                            <v-textarea name="input" label="Sample sentences (Kana)" hint="Write UPPERCASE for Katakana" rows="4" v-model="myGrammar.sample_kana" disabled></v-textarea>
+                            <v-textarea name="input" label="Sample sentences (Kana)" hint="Write UPPERCASE for Katakana" rows="4" v-model="myGrammar[0].sample_kana" disabled></v-textarea>
                         </v-flex>
 
                     </v-layout>
@@ -85,7 +86,7 @@
 <script>
 import {
     mapState
-} from 'vuex'
+} from 'vuex';
 import grammarService from "@/services/grammarService";
 export default {
     name: "Review",
@@ -93,7 +94,16 @@ export default {
         return {
             message: "",
             items: [],
-            myGrammar: [],
+            myGrammar: {
+                title: null,
+                short_description: null,
+                tag: null,
+                url: null,
+                grammar: null,
+                sample_romaji: null,
+                sample_kana: null,
+                is_reviewed: null
+            },
             editing: false
         };
     },
@@ -110,29 +120,22 @@ export default {
     methods: {
         save() {
             this.editing = false;
-            this.create();
+            this.update();
         },
         edit() {
             this.editing = true;
         },
         reviewed() {
+            this.myGrammar[0].is_reviewed = true;
+            this.update();
             this.$emit("reviewed");
         },
         /* remove() {
         	this.$emit("delete");
         }, */
-        async create() {
+        async update() {
             try {
-                const response = await grammarService.post({
-                    title: this.myGrammar.title,
-                    short_description: this.myGrammar.short_description,
-                    tag: this.myGrammar.tag,
-                    url: this.myGrammar.url,
-                    grammar: this.myGrammar.grammar,
-                    sample_romaji: this.myGrammar.sample_romaji,
-                    sample_kana: this.myGrammar.sample_kana,
-                    UserId: this.user.id
-                });
+                const response = await grammarService.put(this.myGrammar[0]);
 
             } catch (error) {
                 console.log(error)
@@ -148,7 +151,7 @@ export default {
         }		} */
     async beforeMount() {
         try {
-            const user = 1;
+            const user = 26;
             //console.log(user)
             this.myGrammar = (await grammarService.show(user)).data
         } catch (error) {

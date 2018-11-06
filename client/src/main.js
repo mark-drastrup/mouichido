@@ -9,7 +9,9 @@ import 'vuetify/dist/vuetify.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'; */
 import store from '@/store/store';
 
-Vue.use(Vuetify)
+Vue.use(Vuetify, {
+  iconfont: 'mdi'
+ })
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

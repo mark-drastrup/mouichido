@@ -4,31 +4,32 @@
         <v-list dense>
             <v-list-tile v-on:click="show">
                 <v-list-tile-action>
-                    <v-icon>dashboard</v-icon>
+                    <v-icon>check</v-icon>
                 </v-list-tile-action>
                 <v-list-tile-content>
-                    <v-list-tile-title>Dashboard</v-list-tile-title>
+                    <v-list-tile-title>Review</v-list-tile-title>
                 </v-list-tile-content>
             </v-list-tile>
-            <v-list-tile>
+            <v-list-tile v-on:click="newCard">
                 <v-list-tile-action>
-                    <v-icon>settings</v-icon>
+                    <v-icon>add</v-icon>
                 </v-list-tile-action>
                 <v-list-tile-content>
-                    <v-list-tile-title>Settings</v-list-tile-title>
+                    <v-list-tile-title>New</v-list-tile-title>
                 </v-list-tile-content>
             </v-list-tile>
         </v-list>
     </v-navigation-drawer>
     <v-toolbar app fixed clipped-left class="blue darken-1" dark>
         <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-        <v-toolbar-title>Application</v-toolbar-title>
+        <v-toolbar-title>Mouichido</v-toolbar-title>
     </v-toolbar>
     <v-content>
         <v-container fluid>
             <v-layout>
                 <v-flex>
-                    <Review v-if="showCard" @reviewed="reviewed"></Review>
+                    <Review v-if="showReview" @reviewed="reviewed"></Review>
+                    <New v-if="showNew" @keepReviewing="show" v-bind:alert="this.showAlert"></New>
                 </v-flex>
             </v-layout>
         </v-container>
@@ -38,20 +39,29 @@
 
 <script>
 import Review from "./Review"
+import New from "./New"
 export default {
     data: () => ({
         drawer: true,
-        showCard: false,
+        showReview: true,
+        showNew: false,
+        showAlert: false
     }),
     components: {
-        Review
+        Review,
+        New
     },
     props: {
         source: String
     },
     methods: {
+        test() {
+            this.showAlert = true
+        },
         reviewed() {
-            this.showCard = false;
+            this.showReview = false;
+            this.showAlert = true;
+            this.showNew = true;
         },
         /* save() {
           this.create();
@@ -61,7 +71,13 @@ export default {
           this.entry.editing = true;
         }, */
         show() {
-            this.showCard = true;
+            this.showReview = true;
+            this.showNew = false;
+        },
+        newCard() {
+            this.showNew = true;
+            this.showAlert = false;
+            this.showReview = false;
         }
     }
 }

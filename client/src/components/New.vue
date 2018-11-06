@@ -2,10 +2,14 @@
 <v-layout>
     <v-flex xs12 sm6 offset-sm3>
         <v-card>
+            <v-alert :value="true" type="success" v-if="alert">
+                Great job! <a @click="keepReviewing">Keep reviewing</a>
+            </v-alert>
             <v-card-title>
-                <h1 class="grey--text text-lg-center">Today's entry</h1>
+                <h1 class="grey--text text-lg-center">New entry</h1>
             </v-card-title>
-            <v-card-text v-if="editing">
+
+            <v-card-text>
                 <v-container grid-list-sm>
                     <v-layout row wrap>
                         <v-flex xs12 sm6>
@@ -33,7 +37,7 @@
                         <!-- <v-flex xs12>		<v-textarea		name="input"		label="Sample sentences (Kana)"		hint="Write UPPERCASE for Katakana"		rows="4"		v-bind="sample_kana"		v-on:input="sample_kana = $event.target.sample_kana"		id="kana"		></v-textarea>		</v-flex> -->
 
                         <v-flex xs12>
-                            <v-textarea name="input" label="Sample sentences (Kana)" hint="Write UPPERCASE for Katakana" rows="4" v-model="myGrammar.sample_kana" id="kana"></v-textarea>
+                            <v-textarea name="input" label="Sample sentences (Kana)" hint="Write UPPERCASE for Katakana" rows="4" v-model="myGrammar.sample_kana"></v-textarea>
                         </v-flex>
 
                     </v-layout>
@@ -49,15 +53,18 @@
 </template>
 
 <script>
-import {mapState} from "vuex";
+import {
+    mapState
+} from "vuex";
 import grammarService from "@/services/grammarService";
 export default {
+    props: ["alert"],
     name: "New",
     data() {
         return {
             message: "",
             items: [],
-            myGrammar: [{
+            myGrammar: {
                 title: "",
                 short_description: "",
                 tag: "",
@@ -65,11 +72,14 @@ export default {
                 grammar: "",
                 sample_romaji: "",
                 sample_kana: "",
-                UserId: this.user.id
-            }],
+                is_reviewed: false
+            },
         };
     },
-    /* async mounted() {		let kana = document.getElementById("kana")		wanakana.bind(kana); 		}, */
+    /* async mounted() {
+        let kana = document.getElementById("kana");
+        wanakana.bind(kana);
+    }, */
     computed: {
         ...mapState(["isLoggedIn", "user"])
     },
@@ -77,6 +87,9 @@ export default {
         save() {
             this.create();
             this.remove();
+        },
+        keepReviewing() {
+            this.$emit("keepReviewing");
         },
         async create() {
             try {
@@ -88,7 +101,8 @@ export default {
                     grammar: this.myGrammar.grammar,
                     sample_romaji: this.myGrammar.sample_romaji,
                     sample_kana: this.myGrammar.sample_kana,
-                    UserId: this.user.id
+                    UserId: this.user.id,
+                    is_reviewed: this.myGrammar.is_reviewed
                 });
             } catch (error) {
                 console.log(error);
