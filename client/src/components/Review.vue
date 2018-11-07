@@ -24,17 +24,17 @@
                         </v-flex>
 
                         <v-flex xs12>
-                            <v-textarea name="input" label="Grammar description" rows="4" v-model="myGrammar[0].grammar"></v-textarea>
+                            <v-textarea name="input" label="Grammar description" rows="4" v-model="myGrammar[0].grammar" auto-grow></v-textarea>
                         </v-flex>
 
                         <v-flex xs12>
-                            <v-textarea name="input" label="Sample sentences (Romaji)" rows="4" v-model="myGrammar[0].sample_romaji"></v-textarea>
+                            <v-textarea name="input" label="Sample sentences (Romaji)" rows="4" v-model="myGrammar[0].sample_romaji" auto-grow></v-textarea>
                         </v-flex>
 
                         <!-- <v-flex xs12>		<v-textarea		name="input"		label="Sample sentences (Kana)"		hint="Write UPPERCASE for Katakana"		rows="4"		v-bind="sample_kana"		v-on:input="sample_kana = $event.target.sample_kana"		id="kana"		></v-textarea>		</v-flex> -->
 
                         <v-flex xs12>
-                            <v-textarea name="input" label="Sample sentences (Kana)" hint="Write UPPERCASE for Katakana" rows="4" v-model="myGrammar[0].sample_kana" id="kana"></v-textarea>
+                            <v-textarea name="input" label="Sample sentences (Kana)" hint="Write UPPERCASE for Katakana" rows="4" v-model="myGrammar[0].sample_kana" id="kana" auto-grow></v-textarea>
                         </v-flex>
 
                     </v-layout>
@@ -59,15 +59,15 @@
                         </v-flex>
 
                         <v-flex xs12>
-                            <v-textarea name="input" label="Grammar description" rows="4" v-model="myGrammar[0].grammar" disabled></v-textarea>
+                            <v-textarea name="input" label="Grammar description" rows="4" v-model="myGrammar[0].grammar" disabled auto-grow></v-textarea>
                         </v-flex>
 
                         <v-flex xs12>
-                            <v-textarea name="input" label="Sample sentences (Romaji)" rows="4" v-model="myGrammar[0].sample_romaji" disabled></v-textarea>
+                            <v-textarea name="input" label="Sample sentences (Romaji)" rows="4" v-model="myGrammar[0].sample_romaji" disabled auto-grow></v-textarea>
                         </v-flex>
 
                         <v-flex xs12>
-                            <v-textarea name="input" label="Sample sentences (Kana)" hint="Write UPPERCASE for Katakana" rows="4" v-model="myGrammar[0].sample_kana" disabled></v-textarea>
+                            <v-textarea name="input" label="Sample sentences (Kana)" hint="Write UPPERCASE for Katakana" rows="4" v-model="myGrammar[0].sample_kana" disabled auto-grow></v-textarea>
                         </v-flex>
 
                     </v-layout>
@@ -93,7 +93,7 @@ export default {
     data() {
         return {
             message: "",
-            items: [],
+            items: ["test1", "test2"],
             myGrammar: {
                 title: null,
                 short_description: null,
@@ -151,7 +151,7 @@ export default {
         }		} */
     async beforeMount() {
         try {
-            const user = 26;
+            const user = this.user.id;
             //console.log(user)
             this.myGrammar = (await grammarService.show(user)).data
         } catch (error) {
@@ -161,8 +161,12 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .theme--light.v-text-field.v-input--is-disabled .v-input__slot:before {
-    border-image: repeating-linear-gradient(90deg, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 0, transparent 0, transparent 0) 0 repeat !important;
+    border-image: repeating-linear-gradient(90deg,rgba(0,0,0,.38) 0,rgba(0,0,0,.38) 0px,transparent 0,transparent 4px) 1 repeat;
+}
+
+.theme--light.v-input--is-disabled .v-label, .theme--light.v-input--is-disabled input, .theme--light.v-input--is-disabled textarea {
+    color: black;
 }
 </style>

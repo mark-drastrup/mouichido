@@ -83,6 +83,8 @@ export default {
 }
 </script>
 
-<style scoped>
-  
+<style>
+    main.v-content {
+        padding-top: 0;
+    }
 </style>
