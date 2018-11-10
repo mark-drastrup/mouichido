@@ -6,7 +6,7 @@
                 <h1 class="grey--text text-lg-center">Today's Review</h1>
             </v-card-title>
         
-            <v-card-text v-if="editing">
+            <v-card-text v-if="editing && !empty">
                 <v-container grid-list-sm>
                     <v-layout row wrap>
                         <v-flex xs12 sm6>
@@ -41,7 +41,7 @@
                 </v-container>
             </v-card-text>
 
-            <v-card-text v-if="!editing">
+            <v-card-text v-if="!editing && !empty">
                 <v-container fluid grid-list-sm>
                     <v-layout row wrap>
                         <v-flex xs12 sm6>
@@ -73,7 +73,12 @@
                     </v-layout>
                 </v-container>
             </v-card-text>
-            <v-responsive>
+
+            <v-card-text v-if="empty">
+                You have no more reviews! <a @click="createNew">Create new</a>
+            </v-card-text>
+
+            <v-responsive v-if="!empty">
                 <v-btn color="success" v-on:click="save" v-if="editing">Save</v-btn>
                 <v-btn color="success" v-on:click="reviewed" v-if="!editing">Reviewed</v-btn>
                 <v-btn color="info" v-on:click="edit" v-if="!editing">Edit</v-btn>
@@ -104,7 +109,8 @@ export default {
                 sample_kana: null,
                 is_reviewed: null
             },
-            editing: false
+            editing: false,
+            empty: false
         };
     },
     /* async mounted() {
@@ -130,6 +136,9 @@ export default {
             this.update();
             this.$emit("reviewed");
         },
+        createNew () {
+            this.$emit("createNew");
+        },
         /* remove() {
         	this.$emit("delete");
         }, */
@@ -154,6 +163,10 @@ export default {
             const user = this.user.id;
             //console.log(user)
             this.myGrammar = (await grammarService.show(user)).data
+
+            if(this.myGrammar.length < 1) {
+                this.empty = true;
+            }
         } catch (error) {
             console.log(error)
         }

@@ -1,24 +1,22 @@
 <template>
-	<div>
-		<h1>Sign up</h1>
+<v-form>
+    <v-container grid-list-sm>
+        <p class="display-2">Sign Up</p>
+        <v-layout row justify-center>
+            <v-flex xs4>
+                <v-text-field label="Username" v-model="username"></v-text-field>
+            </v-flex>
+        </v-layout>
+        <v-layout row justify-center>
+            <v-flex xs4>
+                <v-text-field label="Password" v-model="password" type="password"></v-text-field>
+            </v-flex>
+        </v-layout>
 
-		<input
-			type="username"
-			name="username"
-			v-model="username"
-			placeholder="username"
-		/>
-		<br>
-		<input
-			type="password"
-			name="password"
-			v-model="password"
-			placeholder="password"
-		/>
-		<br>
-		<button
-		 @click="signUp">Sign up!</button>
-  </div>
+        <v-btn color="info" @click="signUp">Sign Up!</v-btn>
+
+    </v-container>
+</v-form>
 </template>
 
 <script>

@@ -28,7 +28,7 @@
         <v-container fluid>
             <v-layout>
                 <v-flex>
-                    <Review v-if="showReview" @reviewed="reviewed"></Review>
+                    <Review v-if="showReview" @reviewed="reviewed" @createNew="newCard"></Review>
                     <New v-if="showNew" @keepReviewing="show" v-bind:alert="this.showAlert"></New>
                 </v-flex>
             </v-layout>
