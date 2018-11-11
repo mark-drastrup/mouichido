@@ -86,7 +86,6 @@ export default {
     methods: {
         save() {
             this.create();
-            this.remove();
         },
         keepReviewing() {
             this.$emit("keepReviewing");
