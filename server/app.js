@@ -4,6 +4,7 @@ const cors = require('cors');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const Sequelize = require('sequelize');
+const { Op } = require('sequelize');
 const jwt = require("jsonwebtoken");
 const config = require("./config");
 const passport = require("passport");
@@ -26,8 +27,8 @@ function jwtSignUser(user) {
 }
 
 function isAuthenticated(req, res, next) {
-	passport.authenticate("jwt", function(err, user) {
-		if(err || !user) {
+	passport.authenticate("jwt", function (err, user) {
+		if (err || !user) {
 			res.status(403).send({
 				error: "You have to be logged in to access this page"
 			});
@@ -40,10 +41,6 @@ function isAuthenticated(req, res, next) {
 
 
 //Routes
-app.get("/", (req, res) => {
-	res.send("Test");
-});
-
 app.post("/register", async function (req, res) {
 	try {
 		console.log(req.body);
@@ -95,22 +92,38 @@ app.post("/login", async function (req, res) {
 	}
 });
 
-/* app.get("/grammar/:userId", isAuthenticated, async function(req, res) {
+app.get("/grammar", async function (req, res) {
 	try {
-		let grammar = await Entry.findAll({
-			where: {
-				UserId: req.params.userId
-			}
-		});
-		res.send(grammar);
-	} catch (error) {	
-		res.status(500).send({
-			error: "An error has occured while trying to fetch grammar"
-		});
-	}
-}); */
+		let grammar = null;
+		const search = req.query.search;
+		if (search) {
+			grammar = await Entry.findAll({
+				where: {
+					[Op.or]: [
+						"title", "short_description", "tag"
+					].map(key => ({
+						[key]: {
+							[Op.like]: `%${search}%`
+						}
+					}))
+				}
+			});
+		} /* else {
+			grammar = await Entry.findAll({
+				limit: 10
+			});
+		} */
 
-app.get("/grammar/:userId", isAuthenticated, async function(req, res) {
+		res.send(grammar)
+	} catch (error) {
+		console.log(error)
+		res.status(500).send({
+			error: 'An error has occured while trying to fetch grammar'
+		})
+	}
+});
+
+app.get("/grammar/:userId", isAuthenticated, async function (req, res) {
 	try {
 		console.log("Jeg er inde")
 		const grammar = await Entry.findAll({
@@ -123,14 +136,14 @@ app.get("/grammar/:userId", isAuthenticated, async function(req, res) {
 		}).then(data => {
 			res.send(data);
 		});
-	} catch (error) {	
+	} catch (error) {
 		res.status(500).send({
 			error: "An error has occured while trying to fetch grammar"
 		});
 	}
 });
 
-app.post("/grammar", isAuthenticated, async function(req, res) {
+app.post("/grammar", isAuthenticated, async function (req, res) {
 	try {
 		const entry = await Entry.create(req.body);
 		res.send(entry);
@@ -141,7 +154,7 @@ app.post("/grammar", isAuthenticated, async function(req, res) {
 	}
 });
 
-app.put("/grammar", isAuthenticated, async function(req, res) {
+app.put("/grammar", isAuthenticated, async function (req, res) {
 	try {
 		console.log("Jeg er inde");
 		const entry = await Entry.update(req.body, {
@@ -156,27 +169,6 @@ app.put("/grammar", isAuthenticated, async function(req, res) {
 		});
 	}
 });
-
-/* app.post("/grammar", isAuthenticated, async function(req, res) {
-	try {
-		const entry = await User.findById(1)
-		.then(user => { 
-			user.createEntry(req.body)
-		})
-		.then(response => {
-			console.log(response)
-			const entryJson = entry.toJSON;
-			res.send({
-				entry: entryJson
-			});
-		}); 
-		
-	} catch (error) {
-		res.status(400).send({
-			error: "An error has occured while trying to save grammar."
-		});
-	}
-}); */
 
 app.listen(3000, () => {
 	console.log("App is running on port 3000")

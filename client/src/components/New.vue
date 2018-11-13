@@ -63,7 +63,7 @@ export default {
     data() {
         return {
             message: "",
-            items: [],
+            items: ["Noun", "Verb", "Adjective"],
             myGrammar: {
                 title: "",
                 short_description: "",

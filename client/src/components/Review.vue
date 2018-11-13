@@ -98,7 +98,7 @@ export default {
     data() {
         return {
             message: "",
-            items: ["test1", "test2"],
+            items: ["Noun", "Verb", "Adjective"],
             myGrammar: {
                 title: null,
                 short_description: null,
