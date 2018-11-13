@@ -110,12 +110,13 @@ app.post("/login", async function (req, res) {
 	}
 }); */
 
-app.get("/grammar/:grammarId", isAuthenticated, async function(req, res) {
+app.get("/grammar/:userId", isAuthenticated, async function(req, res) {
 	try {
 		console.log("Jeg er inde")
 		const grammar = await Entry.findAll({
 			limit: 1,
 			where: {
+				UserId: req.params.userId,
 				is_reviewed: false
 			},
 			order: [["createdAt", "ASC"]]

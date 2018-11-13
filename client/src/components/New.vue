@@ -1,10 +1,10 @@
 <template>
 <v-layout>
     <v-flex xs12 sm6 offset-sm3>
+        <v-alert :value="true" type="success" v-if="alert">
+            Great job! <a @click="keepReviewing">Keep reviewing</a>
+        </v-alert>
         <v-card>
-            <v-alert :value="true" type="success" v-if="alert">
-                Great job! <a @click="keepReviewing">Keep reviewing</a>
-            </v-alert>
             <v-card-title>
                 <h1 class="grey--text text-lg-center">New entry</h1>
             </v-card-title>
@@ -86,7 +86,6 @@ export default {
     methods: {
         save() {
             this.create();
-            this.remove();
         },
         keepReviewing() {
             this.$emit("keepReviewing");
