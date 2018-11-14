@@ -4,18 +4,88 @@
         <header>
             <link href="https://fonts.googleapis.com/css?family=Material+Icons" rel="stylesheet">
         </header>
-        <main>
-            <v-container fluid>
-                <router-view></router-view>
-            </v-container>
-        </main>
+        <v-layout>
+            <v-navigation-drawer v-model="drawer" clipped fixed app>
+                <v-list dense>
+                    <v-list-tile v-on:click="show">
+                        <v-list-tile-action>
+                            <v-icon>check</v-icon>
+                        </v-list-tile-action>
+                        <v-list-tile-content>
+                            <v-list-tile-title>Review</v-list-tile-title>
+                        </v-list-tile-content>
+                    </v-list-tile>
+                    <v-list-tile v-on:click="newCard">
+                        <v-list-tile-action>
+                            <v-icon>add</v-icon>
+                        </v-list-tile-action>
+                        <v-list-tile-content>
+                            <v-list-tile-title>New</v-list-tile-title>
+                        </v-list-tile-content>
+                    </v-list-tile>
+                    <v-list-tile v-on:click="search">
+                        <v-list-tile-action>
+                            <v-icon>search</v-icon>
+                        </v-list-tile-action>
+                        <v-list-tile-content>
+                            <v-list-tile-title>Search</v-list-tile-title>
+                        </v-list-tile-content>
+                    </v-list-tile>
+                </v-list>
+            </v-navigation-drawer>
+            <v-toolbar app fixed clipped-left class="blue darken-1" dark>
+                <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+                <v-toolbar-title>Mouichido</v-toolbar-title>
+            </v-toolbar>
+            <v-content>
+                <router-view 
+                    :showReview="this.showReview" 
+                    :showNew="this.showNew" 
+                    :showSearch="this.showSearch" 
+                    @newCard="newCard" 
+                    @show="show"
+                    @reviewed="reviewed"
+                >
+                </router-view>
+            </v-content>
+        </v-layout>
+
     </v-app>
 </div>
 </template>
 
 <script>
 export default {
-    name: 'app'
+    name: 'app',
+    data() {
+        return {
+            drawer: true,
+            showReview: true,
+            showNew: false,
+            showSearch: false,
+        }
+    },
+    methods: {
+        show() {
+            this.showReview = true;
+            this.showNew = false;
+            this.showSearch = false;
+        },
+        newCard() {
+            this.showNew = true;
+            this.showReview = false;
+            this.showSearch = false;
+        },
+        search() {
+            this.showSearch = true;
+            this.showNew = false;
+            this.showReview = false
+        },
+        reviewed() {
+            this.showReview = false;
+            this.showNew = true;
+        },
+    }
 }
 </script>
 

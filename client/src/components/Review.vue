@@ -2,8 +2,8 @@
 <v-layout>
     <v-flex xs12 sm6 offset-sm3>
         <v-card>
-            <v-card-title>
-                <h1 class="grey--text text-lg-center">Today's Review</h1>
+            <v-card-title class="blue darken-1">
+                <h1 class="white--text text-lg-center">Today's Review</h1>
             </v-card-title>
         
             <v-card-text v-if="editing && !empty">
@@ -75,7 +75,7 @@
             </v-card-text>
 
             <v-card-text v-if="empty">
-                You have no more reviews! <a @click="createNew">Create new</a>
+                You have nothing to review! <a @click="createNew">Create new</a>
             </v-card-text>
 
             <v-responsive v-if="!empty">

@@ -13,25 +13,27 @@
         </v-form>
 
         <v-container grid-list-md>
-            <v-layout row>
+            <v-layout row wrap>
                 <v-flex v-for="entry in grammar" v-bind:key="entry.id" xs12 sm4>
                     <v-card>
-                        <v-card-title>
-                            <h1 class="grey--text text-lg-center">{{entry.title}}</h1>
+                        <v-card-title class="blue darken-1">
+                            <h2 class="white--text text-xs-left">{{entry.title}}</h2>
+                            <span class="white--text text-xs-right font-weight-light font-italic" v-if="entry.is_reviewed">Reviewed</span>
                         </v-card-title>
 
                         <v-card-text>
                             <v-container grid-list-sm>
                                 <v-layout column>
                                     <v-flex xs12 sm6>
-                                        <p>{{entry.short_description}}</p>
+                                        <p class="text-xs-left subheading"><strong>Tag:</strong> {{entry.tag}}</p>
+                                        <p class="text-xs-left subheading"><strong>Short description: </strong>{{entry.short_description}}</p>
                                     </v-flex>
                                 </v-layout>
                             </v-container>
                         </v-card-text>
 
                         <v-responsive>
-                            <v-btn color="info">view</v-btn>
+                            <v-btn flat color="info">view</v-btn>
                         </v-responsive>
                     </v-card>
                 </v-flex>

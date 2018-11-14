@@ -5,8 +5,8 @@
             Great job! <a @click="keepReviewing">Keep reviewing</a>
         </v-alert>
         <v-card>
-            <v-card-title>
-                <h1 class="grey--text text-lg-center">New entry</h1>
+            <v-card-title class="blue darken-1">
+                <h1 class="white--text text-lg-center">New entry</h1>
             </v-card-title>
 
             <v-card-text>
