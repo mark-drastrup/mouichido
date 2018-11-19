@@ -4,13 +4,28 @@ const cors = require('cors');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const Sequelize = require('sequelize');
+/* const sequelize = require("./config/config.json"); */
 const { Op } = require('sequelize');
 const jwt = require("jsonwebtoken");
 const config = require("./config");
 const passport = require("passport");
 const User = require("./models").User;
 const Entry = require("./models").Entry;
+const models = require('./models');
 
+//Connecting to db
+const sequelize = new Sequelize('mouichido', 'drastrup', 'DfUsHS48EJ4wxkbm', {
+	host: 'localhost',
+	dialect: 'postgres',
+	operatorsAliases: false,
+
+	pool: {
+		max: 5,
+		min: 0,
+		acquire: 30000,
+		idle: 10000
+	},
+});
 
 //Configure app
 app.use(bodyParser.json())
@@ -103,7 +118,7 @@ app.get("/grammar", async function (req, res) {
 						"title", "short_description", "tag"
 					].map(key => ({
 						[key]: {
-							[Op.like]: `%${search}%`
+							[Op.iLike]: `%${search}%`
 						}
 					}))
 				}
@@ -170,6 +185,23 @@ app.put("/grammar", isAuthenticated, async function (req, res) {
 	}
 });
 
-app.listen(3000, () => {
+models.sequelize.sync()
+	.then(() => {
+		app.listen(3000, () => {
+			console.log("Connection has been established successfully.")
+		});
+	})
+	.catch(err => {
+		console.error('Unable to connect to the database:', err);
+	});
+/* sequelize
+	.authenticate()
+	.then(() => {
+		console.log('Connection has been established successfully.');
+	})
+	.catch(err => {
+		console.error('Unable to connect to the database:', err);
+	}); */
+/* app.listen(3000, () => {
 	console.log("App is running on port 3000")
-})
+}) */

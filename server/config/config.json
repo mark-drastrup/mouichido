@@ -1,21 +1,29 @@
 {
   "development": {
-    "dialect": "sqlite",
-    "storage": "./data.sqlite3",
+    "username": "drastrup",
+    "password": "DfUsHS48EJ4wxkbm",
+    "database": "mouichido",
+    "host": "127.0.0.1",
+    "port": 5432,
+    "dialect": "postgres",
     "operatorsAliases": false
   },
   "test": {
-    "username": "root",
-    "password": null,
-    "database": "database_test",
+    "username": "drastrup",
+    "password": "DfUsHS48EJ4wxkbm",
+    "database": "mouichido",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "port": 5432,
+    "dialect": "postgres",
+    "operatorsAliases": false
   },
   "production": {
-    "username": "root",
-    "password": null,
-    "database": "database_production",
+    "username": "drastrup",
+    "password": "DfUsHS48EJ4wxkbm",
+    "database": "mouichido",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "port": 5432,
+    "dialect": "postgres",
+    "operatorsAliases": false
   }
 }
