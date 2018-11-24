@@ -1,0 +1,25 @@
+{
+  "development": {
+    "username": "drastrup",
+    "password": "DfUsHS48EJ4wxkbm",
+    "database": "mouichido",
+    "host": "127.0.0.1",
+    "port": 5432,
+    "dialect": "postgres",
+    "operatorsAliases": false
+  },
+  "test": {
+    "username": "drastrup",
+    "password": "DfUsHS48EJ4wxkbm",
+    "database": "mouichido",
+    "host": "127.0.0.1",
+    "port": 5432,
+    "dialect": "postgres",
+    "operatorsAliases": false
+  },
+  "production": {
+    "use_env_variable": "DATABASE_URL",
+    "dialect": "postgres",
+    "operatorsAliases": false
+  }
+}
