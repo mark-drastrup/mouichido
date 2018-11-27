@@ -1,14 +1,13 @@
 <template>
-
-        <v-container fluid>
-            <v-layout>
-                <v-flex>
-                    <Review v-if="showReview" @reviewed="reviewed" @createNew="newCard"></Review>
-                    <New v-if="showNew" @keepReviewing="show" v-bind:alert="showAlert"></New>
-                    <Search v-if="showSearch"></Search>
-                </v-flex>
-            </v-layout>
-        </v-container>
+    <v-container fluid>
+        <v-layout>
+            <v-flex>
+                <Review @reviewed="reviewed" @createNew="newCard"></Review>
+                <New v-bind:alert="showAlert"></New>
+                <Search></Search>
+            </v-flex>
+        </v-layout>
+    </v-container>
 </template>
 
 <script>
@@ -16,7 +15,7 @@ import Review from "./Review"
 import New from "./New"
 import Search from "./Search"
 export default {
-    props: ["showReview", "showNew", "showSearch"],
+    //props: ["showReview", "showNew", "showSearch"],
     data() {
         return {
             showAlert: false
@@ -32,11 +31,12 @@ export default {
     }, */
     methods: {
         reviewed() {
+            console.log("test 2")
             this.showAlert = true;
-            this.$emit("reviewed");
-        },
-        newCard() {
-            this.$emit("newCard");
+            this.$router.push({
+                name: "New",
+                params: {showAlert}
+            });
         },
         show() {
             this.showAlert = false;

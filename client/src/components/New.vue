@@ -37,7 +37,15 @@
                         <!-- <v-flex xs12>		<v-textarea		name="input"		label="Sample sentences (Kana)"		hint="Write UPPERCASE for Katakana"		rows="4"		v-bind="sample_kana"		v-on:input="sample_kana = $event.target.sample_kana"		id="kana"		></v-textarea>		</v-flex> -->
 
                         <v-flex xs12>
-                            <v-textarea name="input" label="Sample sentences (Kana)" hint="Write UPPERCASE for Katakana" rows="4" v-model="myGrammar.sample_kana"></v-textarea>
+                            <v-textarea 
+                                label="Sample sentences (Kana)" 
+                                hint="Write UPPERCASE for Katakana" 
+                                rows="4" 
+                                v-model="myGrammar.sample_kana" 
+                                id="kana" 
+                                @compositionstart="composing=true"
+                                @compositionend="composing=false">
+                            </v-textarea>
                         </v-flex>
 
                     </v-layout>
@@ -74,12 +82,13 @@ export default {
                 sample_kana: "",
                 is_reviewed: false
             },
+            composing: false
         };
     },
-    /* async mounted() {
+    async mounted() {
         let kana = document.getElementById("kana");
         wanakana.bind(kana);
-    }, */
+    },
     computed: {
         ...mapState(["isLoggedIn", "user"])
     },
@@ -88,7 +97,9 @@ export default {
             this.create();
         },
         keepReviewing() {
-            this.$emit("keepReviewing");
+            this.$router.push({
+                name: "Review"
+            });
         },
         async create() {
             try {

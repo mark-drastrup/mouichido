@@ -94,7 +94,7 @@ import {
 } from 'vuex';
 import grammarService from "@/services/grammarService";
 export default {
-    name: "Review",
+    name: "ViewGrammar",
     data() {
         return {
             message: "",
@@ -113,10 +113,6 @@ export default {
             empty: false,
         };
     },
-    /* async mounted() {
-    	let kana = document.getElementById("kana")
-    	wanakana.bind(kana); 
-    }, */
     computed: {
         ...mapState([
             'isLoggedIn',
@@ -138,17 +134,12 @@ export default {
                 name: "New",
                 params: {alert: true}
             });
-            //this.$emit("reviewed");
-            
         },
         createNew () {
             this.$router.push({
                 name: "New"
             });
         },
-        /* remove() {
-        	this.$emit("delete");
-        }, */
         async update() {
             try {
                 const response = await grammarService.put(this.myGrammar[0]);
@@ -158,18 +149,12 @@ export default {
             }
         },
     },
-    /* async mounted() {
-        try {
-          const grammarId = 1;
-          this.myGrammar = (await grammarService.show(grammarId)).data
-        } catch (error) {
-          console.log(error)
-        }		} */
+
     async beforeMount() {
         try {
-            const user = this.user.id;
+            const grammarId = this.$store.state.route.params.id;
             //console.log(user)
-            this.myGrammar = (await grammarService.show(user)).data
+            this.myGrammar = (await grammarService.showGrammar(grammarId)).data
 
             if(this.myGrammar.length < 1) {
                 this.empty = true;

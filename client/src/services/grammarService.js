@@ -11,6 +11,9 @@ export default {
     show(userId) {
         return Api().get(`grammar/${userId}`)
     },
+    showGrammar(grammarId) {
+        return Api().get(`grammar/review/${grammarId}`)
+    },
     post(grammar) {
         return Api().post("grammar", grammar);
     },

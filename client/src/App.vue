@@ -34,19 +34,43 @@
                 </v-list>
             </v-navigation-drawer>
             <v-toolbar app fixed clipped-left class="blue darken-1" dark>
-                <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+                <v-toolbar-side-icon @click.stop="drawer = !drawer" v-if="$store.state.isLoggedIn">
+                    <v-icon>menu</v-icon>
+                </v-toolbar-side-icon>
                 <v-toolbar-title>Mouichido</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-toolbar-items>
+                    <v-btn 
+                        v-if="!$store.state.isLoggedIn" 
+                        flat 
+                        dark 
+                        :to="{
+                            name: 'Login'
+                        }">
+                        Login
+                    </v-btn>
+
+                    <v-btn 
+                        v-if="!$store.state.isLoggedIn" 
+                        flat 
+                        dark 
+                        :to="{
+                            name: 'Signup'
+                        }">
+                        Sign Up
+                    </v-btn>
+
+                    <v-btn 
+                        v-if="$store.state.isLoggedIn"
+                        flat 
+                        dark
+                        @click="logout">
+                        Log Out
+                    </v-btn>
+                </v-toolbar-items>
             </v-toolbar>
             <v-content>
-                <router-view 
-                    :showReview="this.showReview" 
-                    :showNew="this.showNew" 
-                    :showSearch="this.showSearch" 
-                    @newCard="newCard" 
-                    @show="show"
-                    @reviewed="reviewed"
-                >
-                </router-view>
+                <router-view></router-view>
             </v-content>
         </v-layout>
 
@@ -60,31 +84,44 @@ export default {
     data() {
         return {
             drawer: true,
-            showReview: true,
+            /* showReview: true,
             showNew: false,
-            showSearch: false,
+            showSearch: false, */
         }
     },
     methods: {
         show() {
-            this.showReview = true;
+            /* this.showReview = true;
             this.showNew = false;
-            this.showSearch = false;
+            this.showSearch = false; */
+            this.$router.push({
+                name: "Review"
+            });
         },
         newCard() {
-            this.showNew = true;
+            /* this.showNew = true;
             this.showReview = false;
-            this.showSearch = false;
+            this.showSearch = false; */
+            this.$router.push({
+                name: "New"
+            });
         },
         search() {
-            this.showSearch = true;
+            /* this.showSearch = true;
             this.showNew = false;
-            this.showReview = false
+            this.showReview = false */
+            this.$router.push({
+                name: "Search"
+            });
         },
-        reviewed() {
-            this.showReview = false;
-            this.showNew = true;
-        },
+        logout() {
+            this.$store.dispatch("setToken", null);
+            this.$store.dispatch("setUser", null);
+            //navigate to homepage
+            this.$router.push({
+                name: "root"
+            });
+        }
     }
 }
 </script>

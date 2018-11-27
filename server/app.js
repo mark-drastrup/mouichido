@@ -144,7 +144,6 @@ app.get("/grammar", async function (req, res) {
 
 app.get("/grammar/:userId", isAuthenticated, async function (req, res) {
 	try {
-		console.log("Jeg er inde")
 		const grammar = await Entry.findAll({
 			limit: 1,
 			where: {
@@ -153,6 +152,19 @@ app.get("/grammar/:userId", isAuthenticated, async function (req, res) {
 			},
 			order: [["createdAt", "ASC"]]
 		}).then(data => {
+			res.send(data);
+		});
+	} catch (error) {
+		res.status(500).send({
+			error: "An error has occured while trying to fetch grammar"
+		});
+	}
+});
+
+app.get("/grammar/review/:grammarId", isAuthenticated, async function (req, res) {
+	try {
+		const grammar = await Entry.findById(req.params.grammarId).
+		then(data => {
 			res.send(data);
 		});
 	} catch (error) {

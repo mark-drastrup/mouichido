@@ -14,10 +14,6 @@
         </v-layout>
 
         <v-btn color="info" @click="login">Login</v-btn>
-        <v-btn @click="logout">Logout</v-btn>
-
-        <!-- <button >Login</button>
-        <button @click="logout">Logout</button> -->
 
     </v-container>
 </v-form>
@@ -42,18 +38,13 @@ export default {
                 });
                 this.$store.dispatch("setToken", response.data.token);
                 this.$store.dispatch("setUser", response.data.user);
+                this.$router.push({
+                    name: "Review"
+                });
             } catch (error) {
                 this.error = error.response.data.error;
             }
         },
-        logout() {
-            this.$store.dispatch("setToken", null);
-            this.$store.dispatch("setUser", null);
-            //navigate to homepage
-            this.$router.push({
-                name: "root"
-            });
-        }
     }
 };
 </script>

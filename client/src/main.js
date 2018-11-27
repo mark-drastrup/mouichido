@@ -4,14 +4,19 @@ import Vue from 'vue';
 import App from './App';
 import router from './router';
 import Vuetify from 'vuetify';
-import 'vuetify/dist/vuetify.min.css'
+import { sync } from 'vuex-router-sync';
+import 'vuetify/dist/vuetify.min.css';
+/* import wanakana from 'wanakana'; */
 /* import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css'; */
 import store from '@/store/store';
 
 Vue.use(Vuetify, {
   iconfont: 'mdi'
- })
+ });
+ 
+sync(store, router);
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
