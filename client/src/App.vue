@@ -5,7 +5,7 @@
             <link href="https://fonts.googleapis.com/css?family=Material+Icons" rel="stylesheet">
         </header>
         <v-layout>
-            <v-navigation-drawer v-model="drawer" clipped fixed app>
+            <v-navigation-drawer v-model="drawer" v-if="isLoggedIn" clipped fixed app>
                 <v-list dense>
                     <v-list-tile v-on:click="show">
                         <v-list-tile-action>
@@ -79,15 +79,22 @@
 </template>
 
 <script>
+import {
+    mapState
+} from "vuex";
 export default {
     name: 'app',
     data() {
         return {
             drawer: true,
+            show: false
             /* showReview: true,
             showNew: false,
             showSearch: false, */
         }
+    },
+    computed: {
+        ...mapState(["isLoggedIn", "user"])
     },
     methods: {
         show() {

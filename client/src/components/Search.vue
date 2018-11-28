@@ -33,7 +33,7 @@
                         </v-card-text>
 
                         <v-responsive>
-                            <v-btn flat color="info">view</v-btn>
+                            <v-btn flat color="info" v-on:click="view(entry.id)">view</v-btn>
                         </v-responsive>
                     </v-card>
                 </v-flex>
@@ -79,6 +79,13 @@ export default {
             }
         }
 
+    },
+    methods: {
+        view(id) {
+            this.$router.push({
+                path: `review/${id}`
+            });
+        }
     }
 };
 </script>
