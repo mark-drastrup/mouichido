@@ -1,5 +1,5 @@
 <template>
-<v-layout>
+<v-layout class="pt-5">
     <v-flex xs12 sm6 offset-sm3>
         <v-card>
             <v-card-title class="blue darken-1">

@@ -1,5 +1,5 @@
 <template>
-<v-layout>
+<v-layout class="pt-5">
     <v-flex xs12 sm6 offset-sm3>
         <v-alert :value="true" type="success" v-if="alert">
             Great job! <a @click="keepReviewing">Keep reviewing</a>

@@ -33,7 +33,7 @@
                     </v-list-tile>
                 </v-list>
             </v-navigation-drawer>
-            <v-toolbar app fixed clipped-left class="blue darken-1" dark>
+            <v-toolbar app fixed clipped-left class="blue" dark>
                 <v-toolbar-side-icon @click.stop="drawer = !drawer" v-if="$store.state.isLoggedIn">
                     <v-icon>menu</v-icon>
                 </v-toolbar-side-icon>
@@ -69,7 +69,7 @@
                     </v-btn>
                 </v-toolbar-items>
             </v-toolbar>
-            <v-content>
+            <v-content class="ma-0 pt-0">
                 <router-view></router-view>
             </v-content>
         </v-layout>
@@ -87,7 +87,6 @@ export default {
     data() {
         return {
             drawer: true,
-            show: false
             /* showReview: true,
             showNew: false,
             showSearch: false, */
@@ -126,7 +125,7 @@ export default {
             this.$store.dispatch("setUser", null);
             //navigate to homepage
             this.$router.push({
-                name: "root"
+                name: "LandingPage"
             });
         }
     }

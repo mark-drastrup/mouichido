@@ -1,5 +1,5 @@
 <template>
-<v-form>
+<v-form class="pt-5">
     <v-container grid-list-sm>
         <p class="display-2">Sign Up</p>
         <v-layout row justify-center>
@@ -39,7 +39,7 @@ export default {
 				this.$store.dispatch("setToken", response.data.token);
                 this.$store.dispatch("setUser", response.data.user);
                 this.$router.push({
-                    name: "Main"
+                    name: "Review"
                 });
 			} catch (error) {
 				this.error = error.response.data.error;

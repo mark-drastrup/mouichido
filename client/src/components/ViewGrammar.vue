@@ -1,8 +1,11 @@
 <template>
-<v-layout>
+<v-layout class="pt-5">
     <v-flex xs12 sm6 offset-sm3>
         <v-card>
-            <v-card-title class="blue darken-1">
+            <v-card-title v-bind:class="{
+                blue: !myGrammar.is_reviewed,
+                green: myGrammar.is_reviewed
+            }">
                 <h1 class="white--text text-lg-center">{{myGrammar.title}}</h1>
             </v-card-title>
         

@@ -1,5 +1,5 @@
 <template>
-<v-form>
+<v-form class="pt-5">
     <v-container grid-list-sm>
         <p class="display-2">Login</p>
         <v-layout row justify-center>

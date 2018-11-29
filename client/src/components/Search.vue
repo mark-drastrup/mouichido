@@ -1,5 +1,5 @@
 <template>
-<v-layout column>
+<v-layout column class="pt-5">
     <v-flex xs12>
         <v-form>
             <v-container grid-list-sm>
@@ -14,11 +14,16 @@
 
         <v-container grid-list-md>
             <v-layout row wrap>
-                <v-flex v-for="entry in grammar" v-bind:key="entry.id" xs12 sm4>
+                <v-flex v-for="entry in grammar" v-bind:key="entry.id" sm12 md4>
                     <v-card>
-                        <v-card-title class="blue darken-1">
-                            <h2 class="white--text text-xs-left">{{entry.title}}</h2>
-                            <span class="white--text text-xs-right font-weight-light font-italic" v-if="entry.is_reviewed">Reviewed</span>
+                        <v-card-title v-bind:class="{ 
+                            blue: !entry.is_reviewed,
+                            green: entry.is_reviewed 
+                            }">
+                            <v-layout row justify-space-between align-center>
+                                <h2 class="white--text text-xs-left">{{entry.title}}</h2>
+                                <span class="white--text text-xs-right font-weight-light font-italic" v-if="entry.is_reviewed">Reviewed</span>
+                            </v-layout>
                         </v-card-title>
 
                         <v-card-text>
