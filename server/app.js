@@ -56,13 +56,23 @@ function isAuthenticated(req, res, next) {
 
 
 //Routes
-app.get("/", function(req, res) {
+app.get("/", function (req, res) {
 	res.send("Connection established");
 });
 
 app.post("/register", async function (req, res) {
 	try {
-		console.log(req.body);
+		const { username, password } = req.body;
+		if(username === "") {
+			return res.status(500).send({
+				error: "Please provide a username"
+			});
+		} else if(password === "") {
+			return res.status(500).send({
+				error: "Please provide a password"
+			});
+		}
+
 		const user = await User.create(req.body);
 		const userJson = user.toJSON();
 		res.send({
@@ -70,8 +80,8 @@ app.post("/register", async function (req, res) {
 			token: jwtSignUser(userJson)
 		});
 	} catch (error) {
-		res.status(400).send({
-			error: "This email account is already used."
+		res.status(500).send({
+			error: "This username is already taken."
 		});
 	}
 });
@@ -79,6 +89,16 @@ app.post("/register", async function (req, res) {
 app.post("/login", async function (req, res) {
 	try {
 		const { username, password } = req.body;
+		if(username === "") {
+			return res.status(500).send({
+				error: "Please provide a username"
+			});
+		} else if(password === "") {
+			return res.status(500).send({
+				error: "Please provide a password"
+			});
+		}
+
 		const user = await User.findOne({
 			where: {
 				username: username
@@ -164,9 +184,9 @@ app.get("/grammar/:userId", isAuthenticated, async function (req, res) {
 app.get("/grammar/review/:grammarId", isAuthenticated, async function (req, res) {
 	try {
 		const grammar = await Entry.findById(req.params.grammarId).
-		then(data => {
-			res.send(data);
-		});
+			then(data => {
+				res.send(data);
+			});
 	} catch (error) {
 		res.status(500).send({
 			error: "An error has occured while trying to fetch grammar"
@@ -187,7 +207,6 @@ app.post("/grammar", isAuthenticated, async function (req, res) {
 
 app.put("/grammar", isAuthenticated, async function (req, res) {
 	try {
-		console.log("Jeg er inde");
 		const entry = await Entry.update(req.body, {
 			where: {
 				id: req.body.id
@@ -197,6 +216,25 @@ app.put("/grammar", isAuthenticated, async function (req, res) {
 	} catch (error) {
 		res.status(500).send({
 			error: "An error has occured while trying to update grammar."
+		});
+	}
+});
+
+app.delete("/grammar/:id", isAuthenticated, async function (req, res) {
+	try {
+		/* await Entry.destroy({
+			where: {
+				id: req.params.id
+			}
+		}) */
+		const grammar = await Entry.findById(req.params.id);
+		await grammar.destroy();
+		res.send(grammar);
+		
+		/* res.send(entry); */
+	} catch (error) {
+		res.status(500).send({
+			error: "An error has occured while trying to delete grammar."
 		});
 	}
 });

@@ -26,7 +26,7 @@
                             </v-layout>
                         </v-card-title>
 
-                        <v-card-text>
+                        <v-card-text class="card-height">
                             <v-container grid-list-sm>
                                 <v-layout column>
                                     <v-flex xs12 sm6>
@@ -96,4 +96,7 @@ export default {
 </script>
 
 <style scoped>
+    .card-height {
+        max-height: 150px;
+    }
 </style>

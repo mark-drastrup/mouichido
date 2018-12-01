@@ -12,7 +12,14 @@
                 <v-text-field label="Password" v-model="password" type="password"></v-text-field>
             </v-flex>
         </v-layout>
-
+        <v-layout row justify-center>
+            <v-flex xs4>
+                <v-alert v-if="error" :value="true" type="error">
+                    {{error}}
+                </v-alert>
+            </v-flex>
+        </v-layout>
+        
         <v-btn color="info" @click="login">Login</v-btn>
 
     </v-container>
@@ -26,7 +33,8 @@ export default {
     data() {
         return {
             username: "",
-            password: ""
+            password: "",
+            error: null
         };
     },
     methods: {

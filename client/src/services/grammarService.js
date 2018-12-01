@@ -19,5 +19,8 @@ export default {
     },
     put(grammar) {
         return Api().put("grammar", grammar);
+    },
+    delete(grammarId) {
+        return Api().delete(`grammar/${grammarId}`)
     }
 };

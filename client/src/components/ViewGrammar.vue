@@ -6,9 +6,12 @@
                 blue: !myGrammar.is_reviewed,
                 green: myGrammar.is_reviewed
             }">
-                <h1 class="white--text text-lg-center">{{myGrammar.title}}</h1>
+                <v-layout row justify-space-between align-center>
+                    <h1 class="white--text text-lg-center">{{myGrammar.title}}</h1>
+                    <v-icon dark v-on:click="openDialog">clear</v-icon>
+                </v-layout>
             </v-card-title>
-        
+
             <v-card-text v-if="editing && !empty">
                 <v-container grid-list-sm>
                     <v-layout row wrap>
@@ -48,7 +51,7 @@
                 <v-container fluid grid-list-sm>
                     <v-layout row wrap>
                         <v-flex xs12 sm6>
-                            <v-text-field label="Title" v-model="myGrammar.title" disabled single-line="true"></v-text-field>
+                            <v-text-field label="Title" v-model="myGrammar.title" disabled></v-text-field>
                         </v-flex>
                         <v-flex xs12 sm6>
                             <v-text-field label="Short description" v-model="myGrammar.short_description" disabled></v-text-field>
@@ -84,6 +87,32 @@
                 <v-btn color="info" v-on:click="edit" v-if="!editing">Edit</v-btn>
             </v-responsive>
         </v-card>
+
+        <v-dialog v-model="dialog" width="500">
+            <v-card>
+                <v-card-title class="headline grey lighten-2" primary-title>
+                    Delete grammar
+                </v-card-title>
+
+                <v-card-text>
+                    Do you want to delete this grammar card? It cannot be recreated once it is deleted.
+                </v-card-text>
+
+                <v-divider></v-divider>
+
+                <v-card-actions>
+                    <v-btn color="error" flat v-on:click="destroy">
+                        Delete
+                    </v-btn>
+
+                    <v-spacer></v-spacer>
+
+                    <v-btn color="info" flat v-on:click="dialog = false">
+                        Cancel
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </v-flex>
 </v-layout>
 </template>
@@ -111,6 +140,7 @@ export default {
             },
             editing: false,
             empty: false,
+            dialog: false
         };
     },
     computed: {
@@ -127,6 +157,20 @@ export default {
         edit() {
             this.editing = true;
         },
+        openDialog() {
+            this.dialog = true;
+        },
+        async destroy() {
+            try {
+                const id = this.myGrammar.id;
+                await grammarService.delete(id);
+                this.$router.push({
+                    name: "Search"
+                });
+            } catch (error) {
+                console.log(error)
+            }
+        },
         reviewed() {
             this.myGrammar.is_reviewed = true;
             this.update();
@@ -134,7 +178,7 @@ export default {
                 name: "Search"
             });
         },
-        createNew () {
+        createNew() {
             this.$router.push({
                 name: "New"
             });
@@ -160,7 +204,7 @@ export default {
             //console.log(user)
             this.myGrammar = (await grammarService.showGrammar(grammarId)).data
 
-            if(this.myGrammar.length < 1) {
+            if (this.myGrammar.length < 1) {
                 this.empty = true;
             }
         } catch (error) {
@@ -172,10 +216,13 @@ export default {
 
 <style>
 .theme--light.v-text-field.v-input--is-disabled .v-input__slot:before {
-    border-image: repeating-linear-gradient(90deg,rgba(0,0,0,.38) 0,rgba(0,0,0,.38) 0px,transparent 0,transparent 4px) 1 repeat;
+    border-image: repeating-linear-gradient(90deg, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 0px, transparent 0, transparent 4px) 1 repeat !important;
 }
 
-.theme--light.v-input--is-disabled .v-label, .theme--light.v-input--is-disabled input, .theme--light.v-input--is-disabled textarea {
-    color: black;
+.theme--light.v-input--is-disabled .v-label,
+.theme--light.v-input--is-disabled input,
+.theme--light.v-input--is-disabled textarea,
+.v-select__selection .v-select__selection--comma .v-select__selection--disabled {
+    color: black !important;
 }
 </style>

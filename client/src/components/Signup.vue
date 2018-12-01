@@ -12,6 +12,13 @@
                 <v-text-field label="Password" v-model="password" type="password"></v-text-field>
             </v-flex>
         </v-layout>
+        <v-layout row justify-center>
+            <v-flex xs4>
+                <v-alert v-if="error" :value="true" type="error">
+                    {{error}}
+                </v-alert>
+            </v-flex>
+        </v-layout>
 
         <v-btn color="info" @click="signUp">Sign Up!</v-btn>
 
@@ -22,31 +29,31 @@
 <script>
 import authenticationService from "@/services/authenticationService";
 export default {
-  name: "Signup",
-  data() {
-    return {
-			username: "",
-			password: ""
-    };
-	},
-	methods: {
-		async signUp() {
-			try {
-				const response = await authenticationService.register({
-					username: this.username,
-					password: this.password
-				});
-				this.$store.dispatch("setToken", response.data.token);
+    name: "Signup",
+    data() {
+        return {
+            username: "",
+            password: "",
+            error: null
+        };
+    },
+    methods: {
+        async signUp() {
+            try {
+                const response = await authenticationService.register({
+                    username: this.username,
+                    password: this.password
+                });
+                this.$store.dispatch("setToken", response.data.token);
                 this.$store.dispatch("setUser", response.data.user);
                 this.$router.push({
                     name: "Review"
                 });
-			} catch (error) {
-				this.error = error.response.data.error;
-			}
-			
-		}
-	}
+            } catch (error) {
+                this.error = error.response.data.error;
+            }
+
+        }
+    }
 };
 </script>
-

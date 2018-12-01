@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import store from '@/store/store';
 import Main from '@/components/Main';
 import Signup from '@/components/Signup';
 import Login from '@/components/Login';
@@ -11,15 +12,23 @@ import LandingPage from '@/components/LandingPage';
 
 Vue.use(Router);
 
+const isAuthenticated = (to, from, next) => {
+  if(store.state.isLoggedIn) {
+    next();
+    return;
+  }
+  next("/");
+};
+
 export default new Router({
   routes: [
     {path: '/', name: 'LandingPage', component: LandingPage},
-    {path: '/grammar', name: 'Main', component: Main},
+    {path: '/grammar', name: 'Main', component: Main, beforeEnter: isAuthenticated},
     {path: '/signup', name: "Signup", component: Signup},
     {path: '/login', name: "Login", component: Login},
-    {path: '/grammar/review', name: "Review", component: Review},
-    {path: '/grammar/review/:id', name: "ViewGrammar", component: ViewGrammar},
-    {path: '/grammar/new', name: "New", component: New, props: true},
-    {path: '/grammar/search', name: "Search", component: Search}
+    {path: '/grammar/review', name: "Review", component: Review, beforeEnter: isAuthenticated},
+    {path: '/grammar/review/:id', name: "ViewGrammar", component: ViewGrammar, beforeEnter: isAuthenticated},
+    {path: '/grammar/new', name: "New", component: New, props: true, beforeEnter: isAuthenticated},
+    {path: '/grammar/search', name: "Search", component: Search, beforeEnter: isAuthenticated}
   ]
 })
