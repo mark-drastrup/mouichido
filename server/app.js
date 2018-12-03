@@ -134,10 +134,13 @@ app.post("/login", async function (req, res) {
 app.get("/grammar", async function (req, res) {
 	try {
 		let grammar = null;
+		const userId = req.query.userId;
+		console.log(userId)
 		const search = req.query.search;
 		if (search) {
 			grammar = await Entry.findAll({
 				where: {
+					UserId: userId,
 					[Op.or]: [
 						"title", "short_description", "tag"
 					].map(key => ({

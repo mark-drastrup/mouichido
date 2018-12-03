@@ -80,7 +80,9 @@ export default {
             immediate: true,
             async handler(value) {
                 this.search = value;
-                this.grammar = (await grammarService.index(value)).data
+                const userId = this.$store.state.user.id;
+                console.log(userId)
+                this.grammar = (await grammarService.index(value, userId)).data
             }
         }
 

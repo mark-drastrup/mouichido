@@ -1,10 +1,11 @@
 import Api from "@/services/api";
 
 export default {
-    index(search) {
+    index(search, userId) {
         return Api().get("grammar", {
             params: {
-                search: search
+                search: search,
+                userId: userId
             }
         })
     },
