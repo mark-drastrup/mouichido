@@ -135,9 +135,16 @@ app.get("/grammar", async function (req, res) {
 	try {
 		let grammar = null;
 		const userId = req.query.userId;
-		console.log(userId)
 		const search = req.query.search;
-		if (search) {
+		const filter = JSON.parse(req.query.filter);
+		const tags1 = new Array(filter.tags);
+		const tags = [];
+		console.log(`****************** Her er tags1: ${tags1} ************************`)
+		console.log(`****************** Her er tags: ${tags} ************************`)
+
+		console.log(`*********************** Tags: ${tags} ********************** DATATYPE: ${Array.isArray(tags)}`)
+		if (search && (filter.showUnreviewed === false && filter.tags.length === 0)) {
+			console.log(`************************* INDE I DEN GAMLE FUNKTION *************************`)
 			grammar = await Entry.findAll({
 				where: {
 					UserId: userId,
@@ -150,11 +157,32 @@ app.get("/grammar", async function (req, res) {
 					}))
 				}
 			});
-		} /* else {
+		} else if(filter.showUnreviewed === true || filter.tags.length !== 0) {
+			console.log(`************************* INDE I DEN NYE FUNKTION *************************`)
 			grammar = await Entry.findAll({
-				limit: 10
+				where: {
+					UserId: userId,
+					is_reviewed: !filter.showUnreviewed,
+					tag: {
+						[Op.in]: `%${tags}%`
+					},
+					[Op.or]: [
+						"title", "short_description"
+					].map(key => ({
+						[key]: {
+							[Op.iLike]: `%${search}%`
+						}
+					}))
+				}
 			});
-		} */
+		}  else {
+			console.log(`************************* INDE I DEN DEFAULT FUNKTIONEN *************************`)
+			grammar = await Entry.findAll({
+				where: {
+					UserId: userId
+				}
+			});
+		} 
 
 		res.send(grammar)
 	} catch (error) {

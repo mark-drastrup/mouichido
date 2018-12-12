@@ -4,11 +4,27 @@
         <v-form>
             <v-container grid-list-sm>
                 <p class="display-1">Search</p>
-                <v-layout row justify-center>
-                    <v-flex xs4>
-                        <v-text-field label="Search" v-model="search"></v-text-field>
+                <v-layout column justify-center align-center>
+                    <v-layout row>
+                        <v-flex>
+                            <v-text-field label="Search by title, short description or tag" v-model="search"></v-text-field>
+                        </v-flex>
+                    </v-layout>
+
+                    <v-flex xs3>
+                        <v-switch v-model="filter.showUnreviewed" label="Unreviewed" color="blue" hide-details></v-switch>
+                    </v-flex>
+                    <v-flex xs3>
+                        <v-switch v-model="filter.tags" label="Noun" color="blue" value="Noun" hide-details></v-switch>
+                    </v-flex>
+                    <v-flex xs3>
+                        <v-switch v-model="filter.tags" label="Verb" color="blue" value="Verb" hide-details></v-switch>
+                    </v-flex>
+                    <v-flex xs3>
+                        <v-switch v-model="filter.tags" label="Adjective" color="blue" value="Adjective" hide-details></v-switch>
                     </v-flex>
                 </v-layout>
+
             </v-container>
         </v-form>
 
@@ -60,8 +76,11 @@ export default {
         return {
             search: "",
             grammar: null,
-            title: "",
-            short_description: ""
+            userId: this.$store.state.user.id,
+            filter: {
+                showUnreviewed: false,
+                tags: []
+            }
         };
     },
     watch: {
@@ -80,10 +99,11 @@ export default {
             immediate: true,
             async handler(value) {
                 this.search = value;
-                const userId = this.$store.state.user.id;
-                console.log(userId)
-                this.grammar = (await grammarService.index(value, userId)).data
+                this.grammar = (await grammarService.index(value, this.userId, this.filter)).data
             }
+        },
+        test: async function () {
+            this.grammar = (await grammarService.index(this.search, this.userId, this.filter)).data
         }
 
     },
@@ -93,12 +113,19 @@ export default {
                 path: `review/${id}`
             });
         }
+    },
+    async beforeMount() {
+        try {
+            this.grammar = (await grammarService.index(this.search, this.userId, this.filter)).data
+        } catch (error) {
+            console.log(error)
+        }
     }
 };
 </script>
 
 <style scoped>
-    .card-height {
-        max-height: 150px;
-    }
+.card-height {
+    max-height: 150px;
+}
 </style>
