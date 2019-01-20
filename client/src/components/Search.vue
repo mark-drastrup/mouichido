@@ -4,23 +4,23 @@
         <v-form>
             <v-container grid-list-sm>
                 <p class="display-1">Search</p>
-                <v-layout column justify-center align-center>
-                    <v-layout row>
-                        <v-flex>
-                            <v-text-field label="Search by title, short description or tag" v-model="search"></v-text-field>
-                        </v-flex>
-                    </v-layout>
+                <v-layout row justify-center align-center>
+                    <v-flex xs4>
+                        <v-text-field label="Search by title, short description or tag" v-model="search"></v-text-field>
+                    </v-flex>
+                </v-layout>
 
-                    <v-flex xs3>
+                <v-layout row justify-center>
+                    <v-flex xs2>
                         <v-switch v-model="filter.showUnreviewed" label="Unreviewed" color="blue" hide-details></v-switch>
                     </v-flex>
-                    <v-flex xs3>
+                    <v-flex xs2>
                         <v-switch v-model="filter.tags" label="Noun" color="blue" value="Noun" hide-details></v-switch>
                     </v-flex>
-                    <v-flex xs3>
+                    <v-flex xs2>
                         <v-switch v-model="filter.tags" label="Verb" color="blue" value="Verb" hide-details></v-switch>
                     </v-flex>
-                    <v-flex xs3>
+                    <v-flex xs2>
                         <v-switch v-model="filter.tags" label="Adjective" color="blue" value="Adjective" hide-details></v-switch>
                     </v-flex>
                 </v-layout>
@@ -102,8 +102,11 @@ export default {
                 this.grammar = (await grammarService.index(value, this.userId, this.filter)).data
             }
         },
-        test: async function () {
-            this.grammar = (await grammarService.index(this.search, this.userId, this.filter)).data
+        "filter": {
+            async handler() {
+                this.grammar = (await grammarService.index(this.search, this.userId, this.filter)).data
+            },
+            deep: true
         }
 
     },

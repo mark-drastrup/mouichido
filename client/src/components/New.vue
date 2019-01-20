@@ -4,6 +4,10 @@
         <v-alert :value="true" type="success" v-if="alert">
             Great job! <a @click="keepReviewing">Keep reviewing</a>
         </v-alert>
+
+        <v-alert :value="true" type="success" v-if="created_grammar">
+            Great job! Keep on going!
+        </v-alert>
         <v-card>
             <v-card-title class="blue darken-1">
                 <h1 class="white--text text-lg-center">New entry</h1>
@@ -37,14 +41,7 @@
                         <!-- <v-flex xs12>		<v-textarea		name="input"		label="Sample sentences (Kana)"		hint="Write UPPERCASE for Katakana"		rows="4"		v-bind="sample_kana"		v-on:input="sample_kana = $event.target.sample_kana"		id="kana"		></v-textarea>		</v-flex> -->
 
                         <v-flex xs12>
-                            <v-textarea 
-                                label="Sample sentences (Kana)" 
-                                hint="Write UPPERCASE for Katakana" 
-                                rows="4" 
-                                v-model="myGrammar.sample_kana" 
-                                id="kana" 
-                                @compositionstart="composing=true"
-                                @compositionend="composing=false">
+                            <v-textarea label="Sample sentences (Kana)" hint="Write UPPERCASE for Katakana" rows="4" v-model="myGrammar.sample_kana" id="kana" @compositionstart="composing=true" @compositionend="composing=false">
                             </v-textarea>
                         </v-flex>
 
@@ -82,7 +79,8 @@ export default {
                 sample_kana: "",
                 is_reviewed: false
             },
-            composing: false
+            composing: false,
+            created_grammar: false
         };
     },
     async mounted() {
@@ -114,6 +112,20 @@ export default {
                     UserId: this.user.id,
                     is_reviewed: this.myGrammar.is_reviewed
                 });
+
+                this.created_grammar = true;
+                this.myGrammar.title = "";
+                this.myGrammar.short_description = "";
+                this.myGrammar.tag = "";
+                this.myGrammar.url = "";
+                this.myGrammar.grammar = "";
+                this.myGrammar.sample_romaji = "";
+                this.myGrammar.sample_kana = "";
+
+                setTimeout(() => {
+                    this.created_grammar = false;
+                    console.log("Inde i funktionen")
+                }, 3000)
             } catch (error) {
                 console.log(error);
             }
