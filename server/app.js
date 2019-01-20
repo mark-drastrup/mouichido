@@ -139,12 +139,12 @@ app.get("/grammar", async function (req, res) {
 		const filter = JSON.parse(req.query.filter);
 		const tags1 = new Array(filter.tags);
 		const tags = [];
-		console.log(`****************** Her er tags1: ${tags1} ************************`)
-		console.log(`****************** Her er tags: ${tags} ************************`)
 
-		console.log(`*********************** Tags: ${tags} ********************** DATATYPE: ${Array.isArray(tags)}`)
+		for(var i = 0; i < tags1[0].length; i++) {
+			tags.push(tags1[0][i]);
+		}
+
 		if (search && (filter.showUnreviewed === false && filter.tags.length === 0)) {
-			console.log(`************************* INDE I DEN GAMLE FUNKTION *************************`)
 			grammar = await Entry.findAll({
 				where: {
 					UserId: userId,
@@ -157,14 +157,15 @@ app.get("/grammar", async function (req, res) {
 					}))
 				}
 			});
-		} else if(filter.showUnreviewed === true || filter.tags.length !== 0) {
-			console.log(`************************* INDE I DEN NYE FUNKTION *************************`)
+		} else if(search && (filter.showUnreviewed === true && filter.tags.length !== 0)) {
 			grammar = await Entry.findAll({
 				where: {
 					UserId: userId,
 					is_reviewed: !filter.showUnreviewed,
 					tag: {
-						[Op.in]: `%${tags}%`
+						[Op.or]: [
+							tags
+						]
 					},
 					[Op.or]: [
 						"title", "short_description"
@@ -175,8 +176,69 @@ app.get("/grammar", async function (req, res) {
 					}))
 				}
 			});
-		}  else {
-			console.log(`************************* INDE I DEN DEFAULT FUNKTIONEN *************************`)
+		} else if(search && (filter.showUnreviewed === false && filter.tags.length !== 0)) {
+			grammar = await Entry.findAll({
+				where: {
+					UserId: userId,
+					tag: {
+						[Op.or]: [
+							tags
+						]
+					},
+					[Op.or]: [
+						"title", "short_description"
+					].map(key => ({
+						[key]: {
+							[Op.iLike]: `%${search}%`
+						}
+					}))
+				}
+			});
+		} else if(search && (filter.showUnreviewed === true && filter.tags.length === 0)) {
+			grammar = await Entry.findAll({
+				where: {
+					UserId: userId,
+					is_reviewed: !filter.showUnreviewed,
+					[Op.or]: [
+						"title", "short_description", "tag"
+					].map(key => ({
+						[key]: {
+							[Op.iLike]: `%${search}%`
+						}
+					}))
+				}
+			});
+		} else if(!search && (filter.showUnreviewed === true && filter.tags.length === 0)) {
+			grammar = await Entry.findAll({
+				where: {
+					UserId: userId,
+					is_reviewed: !filter.showUnreviewed,
+				}
+			});
+		} else if(!search && (filter.showUnreviewed === true && filter.tags.length !== 0)) {
+			grammar = await Entry.findAll({
+				where: {
+					UserId: userId,
+					is_reviewed: !filter.showUnreviewed,
+					tag: {
+						[Op.or]: [
+							tags
+						]
+					},
+				}
+			});
+		} else if(!search && (filter.showUnreviewed === false && filter.tags.length !== 0)) {
+			grammar = await Entry.findAll({
+				where: {
+					UserId: userId,
+					tag: {
+						[Op.or]: [
+							tags
+						]
+					},
+				}
+			});
+		} else {
 			grammar = await Entry.findAll({
 				where: {
 					UserId: userId
@@ -279,14 +341,3 @@ models.sequelize.sync()
 	.catch(err => {
 		console.error('Unable to connect to the database:', err);
 	});
-/* sequelize
-	.authenticate()
-	.then(() => {
-		console.log('Connection has been established successfully.');
-	})
-	.catch(err => {
-		console.error('Unable to connect to the database:', err);
-	}); */
-/* app.listen(3000, () => {
-	console.log("App is running on port 3000")
-}) */
